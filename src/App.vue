@@ -8,8 +8,6 @@ function close() {
   window.close()
 }
 async function print() {
-  //logoUrl: 
-  //qrcode 
   const qrCodeUrl = await toDataURL('http://47.114.35.157:6818/pages/scan/assets?assetId=1529044134669631489&corpId=ding73b7db4ffb45819f35c2f4657eb6378f')
   const div = document.createElement('div')
   div.id = 'printMe'
@@ -21,7 +19,7 @@ async function print() {
         const label = h(Label2, {
           qrCodeUrl: qrCodeUrl,
           logoUrl: 'http://47.114.35.157:8301/group1/default/20220525/15/30/5/8de1e5248538881989c104eb8481e4b7.png?name=8de1e5248538881989c104eb8481e4b7.png&download=1',
-          fieldList: [{ fieldName: '资产编码', fieldValue: 'ZHS-122311' }],
+          fieldList: ['资产编码：ZHS-122311'],
           fontSize: 9
         }, {})
         list.push(label)
@@ -51,7 +49,7 @@ const printObj = ref(
 <template>
   <main>
     <img src="./assets/print.png" alt="">
-    <p>请使用Chrome、360、QQ、搜狗等浏览器，以获得最佳打印效果</p>
+    <p>请使用Chrome浏览器，以获得最佳打印效果</p>
     <div class="button-wrapper">
       <button v-print="printObj" @click="print">打印</button>
       <button @click="close">关闭</button>

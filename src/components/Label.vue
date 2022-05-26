@@ -5,20 +5,14 @@
     </div>
     <div class="right">
       <img :src="logoUrl" alt="" v-if="logoUrl">
-      <p class="content" v-if="showField">
-        <span v-for="field in fieldList"
-          :style="{ 'font-size': `${fontSize}pt` }">{{ `${field.fieldName}：${field.fieldValue}` }}</span>
+      <p class="content">
+        <span v-for="field in fieldList" :key="field" :style="{ 'font-size': `${fontSize}pt` }">{{ field }}</span>
       </p>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
 import { PropType } from 'vue';
-
-type Field = {
-  fieldName: string;
-  fieldValue: string
-}
 
 defineProps({
   logoUrl: {
@@ -29,12 +23,8 @@ defineProps({
     type: String,
     default: ''
   },
-  showField: {
-    type: Boolean,
-    default: true
-  },
   fieldList: {
-    type: Array as PropType<Field[]>,
+    type: Array as PropType<string[]>,
     default: () => []
   },
   fontSize: {
