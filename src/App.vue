@@ -1,24 +1,28 @@
 <script setup lang="ts">
 import { ref, h, createApp } from "vue";
+import { toDataURL } from "qrcode"
 import Label from "./components/Label.vue";
 
-const containerRef = ref<HTMLDivElement | null>(null)
 function close() {
   window.close()
 }
-function print() {
+async function print() {
+  //logoUrl: 
+  //qrcode 
+  const qrCodeUrl = await toDataURL('http://47.114.35.157:6818/pages/scan/assets?assetId=1529044134669631489&corpId=ding73b7db4ffb45819f35c2f4657eb6378f')
   const div = document.createElement('div')
   div.id = 'printMe'
   document.body.appendChild(div)
   createApp({
     render() {
       const list = []
-      for (let i = 0; i < 10; i++) {
+      for (let i = 0; i < 1; i++) {
         const label = h(Label, {
-          props: {
-            title: `hello ${i}`
-          }
-        })
+          qrCodeUrl: qrCodeUrl,
+          logoUrl: 'http://47.114.35.157:8301/group1/default/20220525/15/30/5/8de1e5248538881989c104eb8481e4b7.png?name=8de1e5248538881989c104eb8481e4b7.png&download=1',
+          fieldList: [{ fieldName: '资产编码', fieldValue: 'ZHS-122311' }],
+          fontSize: 9
+        }, {})
         list.push(label)
       }
       return list
@@ -29,6 +33,7 @@ const printObj = ref(
   {
     id: "printMe",
     popTitle: 'good print',
+    exteaCss: '<link rel="stylesheet" href="./src/assets//test.css">',
     extraHead: '<meta http-equiv="Content-Language"content="zh-cn"/>',
     beforeOpenCallback(vue: any) {
       vue.printLoading = true

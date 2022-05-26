@@ -1,68 +1,90 @@
 <template>
-  <div>
-    {{ title }}
+  <div style="page-break-after: always;" class="label-wrapper">
+    <div class="left">
+      <img :src="qrCodeUrl" alt="">
+    </div>
+    <div class="right">
+      <img :src="logoUrl" alt="" v-if="logoUrl">
+      <p class="content" v-if="showField">
+        <span v-for="field in fieldList"
+          :style="{ 'font-size': `${fontSize}pt` }">{{ `${field.fieldName}：${field.fieldValue}` }}</span>
+      </p>
+    </div>
   </div>
 </template>
 <script lang="ts" setup>
+import { PropType } from 'vue';
+
+type Field = {
+  fieldName: string;
+  fieldValue: string
+}
+
 defineProps({
-  title: {
+  logoUrl: {
     type: String,
-    default: 'hello'
+    default: ''
+  },
+  qrCodeUrl: {
+    type: String,
+    default: ''
+  },
+  showField: {
+    type: Boolean,
+    default: true
+  },
+  fieldList: {
+    type: Array as PropType<Field[]>,
+    default: () => []
+  },
+  fontSize: {
+    type: Number,
+    default: 12
   }
 })
 </script>
 
-<style scoped>
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0 auto;
-}
-
-div {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  margin: 0 auto;
-  width: 100%;
-  height: 45mm;
-  border: 1px solid black;
-}
-</style>
-
 <style media="print" scoped>
 @page {
-  size: 100mm 50mm;
+  size: auto;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-* {
-  padding: 0;
-  margin: 0;
-  box-sizing: border-box;
+div.label-wrapper {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
 }
 
-body {
-  margin: 0 auto;
+div.left {
+  text-align: center;
+  vertical-align: top;
+  width: 50%;
+  max-height: 50mm;
 }
 
-#printMe {
-  display: block;
+div.right {
+  padding: 8px;
+  padding-left: 0;
+  padding-bottom: 0;
+  width: 50%;
+  height: 100%;
+  overflow: hidden;
 }
 
-div {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  margin: 0 auto;
-  width: 100%;
-  height: 45mm;
-  border: 1px solid black;
+div.left>img {
+  width: 90%;
+}
+
+div.right .content {
+  display: flex;
+  flex-direction: column;
+}
+
+div.right>img {
+  width: 90%;
+  height: 30%;
 }
 </style>
