@@ -2,6 +2,7 @@
 import { ref, h, createApp } from "vue";
 import { toDataURL } from "qrcode"
 import Label from "./components/Label.vue";
+import Label2 from "./components/Label2.vue";
 
 function close() {
   window.close()
@@ -17,7 +18,7 @@ async function print() {
     render() {
       const list = []
       for (let i = 0; i < 1; i++) {
-        const label = h(Label, {
+        const label = h(Label2, {
           qrCodeUrl: qrCodeUrl,
           logoUrl: 'http://47.114.35.157:8301/group1/default/20220525/15/30/5/8de1e5248538881989c104eb8481e4b7.png?name=8de1e5248538881989c104eb8481e4b7.png&download=1',
           fieldList: [{ fieldName: '资产编码', fieldValue: 'ZHS-122311' }],
@@ -32,18 +33,15 @@ async function print() {
 const printObj = ref(
   {
     id: "printMe",
-    popTitle: 'good print',
-    exteaCss: '<link rel="stylesheet" href="./src/assets//test.css">',
+    popTitle: '打印标签',
     extraHead: '<meta http-equiv="Content-Language"content="zh-cn"/>',
     beforeOpenCallback(vue: any) {
       vue.printLoading = true
     },
     openCallback(vue: any) {
       vue.printLoading = false
-      console.log('执行了打印')
     },
-    closeCallback(vue: any) {
-      console.log('关闭了打印工具')
+    closeCallback() {
       document.body.removeChild(document.getElementById('printMe')!)
     }
   }
