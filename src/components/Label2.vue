@@ -1,19 +1,24 @@
 <template>
-  <div style="page-break-after: always;" class="label-wrapper">
+  <div style="page-break-after: always;" class="label-wrapper"
+    :style="{ 'flexDirection': labelType === 3 ? 'column-reverse' : 'column' }">
     <div class="left">
-      <img :src="qrCodeUrl" alt="">
+      <img :src="url" alt="">
     </div>
     <div class="right">
-      <p class="content">
-        <span v-for="field in fieldList" :style="{ 'font-size': `${fontSize}pt` }" :key="field">{{ field }}</span>
-      </p>
+      <div class="content">
+        <p class="field" v-for="field in fieldList" :key="field.fieldName" :style="{ 'font-size': `${fontSize}pt` }">
+          <span class="field-title" v-if="showField">{{ field.fieldName }}：</span>
+          <span class="field-content">{{ field.fieldValue }}</span>
+        </p>
+      </div>
     </div>
   </div>
 </template>
 <script lang="ts" setup>
-import { PropType } from 'vue';
+import { toDataURL } from 'qrcode';
+import { onMounted, PropType, ref } from 'vue';
 
-defineProps({
+const props = defineProps({
   logoUrl: {
     type: String,
     default: ''
@@ -22,14 +27,26 @@ defineProps({
     type: String,
     default: ''
   },
+  labelType: {
+    type: Number,
+    default: 2
+  },
   fieldList: {
-    type: Array as PropType<string[]>,
+    type: Array as PropType<{ fieldName: string; fieldValue: string }[]>,
     default: () => []
+  },
+  showField: {
+    type: Boolean,
+    default: true
   },
   fontSize: {
     type: Number,
     default: 12
   }
+})
+const url = ref('')
+onMounted(async () => {
+  url.value = await toDataURL(props.qrCodeUrl)
 })
 </script>
 

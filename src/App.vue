@@ -1,30 +1,43 @@
 <script setup lang="ts">
-import { ref, h, createApp } from "vue";
-import { toDataURL } from "qrcode"
+import { ref, h, createApp, onMounted, VNode, RendererNode, RendererElement } from "vue";
 import Label from "./components/Label.vue";
 import Label2 from "./components/Label2.vue";
+import axios from "axios"
+
+type Label = {
+  qrCodeUrl: string;
+  logoUrl: string;
+  fontSize: number;
+  labelHeight: number;
+  fieldList: string[];
+  labelWidth: number;
+  labelType: number
+}
+type LabelComp = VNode<RendererNode, RendererElement, {
+  [key: string]: any;
+}>
+const labelList = ref<Label[]>([])
+const LabelType = ref(1)
 
 function close() {
   window.close()
 }
+
 async function print() {
-  const qrCodeUrl = await toDataURL('http://47.114.35.157:6818/pages/scan/assets?assetId=1529044134669631489&corpId=ding73b7db4ffb45819f35c2f4657eb6378f')
   const div = document.createElement('div')
   div.id = 'printMe'
   document.body.appendChild(div)
   createApp({
     render() {
-      const list = []
-      for (let i = 0; i < 1; i++) {
-        const label = h(Label2, {
-          qrCodeUrl: qrCodeUrl,
-          logoUrl: 'http://47.114.35.157:8301/group1/default/20220525/15/30/5/8de1e5248538881989c104eb8481e4b7.png?name=8de1e5248538881989c104eb8481e4b7.png&download=1',
-          fieldList: ['资产编码：ZHS-122311'],
-          fontSize: 9
+      const list: LabelComp[] = []
+      labelList.value.forEach(item => {
+        //@ts-ignore
+        const label = h(LabelType.value === 1 ? Label : Label2, {
+          ...item,
         }, {})
         list.push(label)
-      }
-      return list
+      })
+      return list;
     }
   }).mount(div)
 }
@@ -44,6 +57,43 @@ const printObj = ref(
     }
   }
 )
+
+onMounted(() => {
+  const urlParams = new URLSearchParams(window.location.search)
+  const token = urlParams.get('auth')
+  const downloadLogoIds = urlParams.get('ids')
+  if (token) {
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
+  }
+  axios.get('/api/asset/label/export', {
+    params: {
+      downloadLogoIds,
+      downloadType: 1,
+    }
+  })
+    .then(function (response) {
+      const { assetLabel, assetInfoList, logoUrl } = response.data.data
+      LabelType.value = assetLabel.labelType
+      labelList.value = assetInfoList.map((item: any) => {
+        return {
+          qrCodeUrl: item.qrCodeUrl,
+          logoUrl,
+          fontSize: assetLabel.fontSize,
+          labelHeight: assetLabel.labelHeight,
+          fieldList: item.assetLabelFieldList,
+          showField: assetLabel.showField === 1,
+          labelWidth: assetLabel.labelWidth,
+          labelType: assetLabel.labelType
+        }
+      })
+    })
+    .catch(function (error) {
+      console.log(error);
+    })
+    .then(function () {
+      // always executed
+    });
+})
 </script>
 
 <template>
