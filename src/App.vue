@@ -124,9 +124,9 @@ body {
 main {
   font-family: -apple-system, "Noto Sans", "Helvetica Neue", Helvetica, "Nimbus Sans L", Arial, "Liberation Sans", "PingFang SC", "Hiragino Sans GB", "Noto Sans CJK SC", "Source Han Sans SC", "Source Han Sans CN", "Microsoft YaHei", "Wenquanyi Micro Hei", "WenQuanYi Zen Hei", "ST Heiti", SimHei, "WenQuanYi Zen Hei Sharp", sans-serif;
   background-color: #eff0f4;
-  padding-top: 100px;
   height: 100vh;
   width: 100vw;
+  padding-top: 50px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -134,6 +134,7 @@ main {
 
 p {
   font-size: 20px;
+  color: #7DC1FD;
 }
 
 .button-wrapper {
@@ -152,5 +153,14 @@ button {
   outline: none;
   color: white;
   background-color: #48a5ff;
+}
+
+button:first-child {
+  background-color: #0961BD;
+}
+
+button:last-child {
+  background-color: rgba(23, 26, 29, 0.1);
+  color: rgba(23, 26, 29, 0.6);
 }
 </style>
