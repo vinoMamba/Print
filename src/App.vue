@@ -58,6 +58,8 @@ const printObj = ref(
   }
 )
 
+const disabled = ref(true)
+const buttonText = ref('正在加载标签...')
 onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search)
   const token = urlParams.get('auth')
@@ -86,9 +88,13 @@ onMounted(() => {
           labelType: assetLabel.labelType
         }
       })
+      disabled.value = false
+      buttonText.value = '打印'
     })
     .catch(function (error) {
       console.log(error);
+      disabled.value = true
+      buttonText.value = '加载失败'
     })
     .then(function () {
       // always executed
@@ -101,7 +107,7 @@ onMounted(() => {
     <img src="./assets/print.png" alt="">
     <p>请使用Chrome浏览器，以获得最佳打印效果</p>
     <div class="button-wrapper">
-      <button v-print="printObj" @click="print">打印</button>
+      <button v-print="printObj" @click="print" :disabled="disabled">{{buttonText}}</button>
       <button @click="close">关闭</button>
     </div>
   </main>
