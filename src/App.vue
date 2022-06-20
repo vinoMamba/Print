@@ -67,7 +67,7 @@ onMounted(() => {
   if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
   }
-  axios.get('/api/asset/label/export', {
+  axios.get('https://app90170.eapps.dingtalkcloud.com/asset/label/export', {
     params: {
       downloadLogoIds,
       downloadType: 1,
