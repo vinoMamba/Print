@@ -61,13 +61,14 @@ const printObj = ref(
 const disabled = ref(true)
 const buttonText = ref('正在加载标签...')
 onMounted(() => {
+  const url = window.location.href
+  const downloadLogoIds = url.split('&ids=')[1]
   const urlParams = new URLSearchParams(window.location.search)
   const token = urlParams.get('auth')
-  const downloadLogoIds = urlParams.get('ids')
   if (token) {
     axios.defaults.headers.common['Authorization'] = `Bearer ${token}`
   }
-  axios.get('http://127.0.0.1:6180/api/asset/label/export', {
+  axios.get(`${import.meta.env.VITE_PRINT_URL}/asset/label/export`, {
     params: {
       downloadLogoIds,
       downloadType: 1,
@@ -107,7 +108,7 @@ onMounted(() => {
     <img src="./assets/print.png" alt="">
     <p>请使用Chrome浏览器，以获得最佳打印效果</p>
     <div class="button-wrapper">
-      <button v-print="printObj" @click="print" :disabled="disabled">{{buttonText}}</button>
+      <button v-print="printObj" @click="print" :disabled="disabled">{{ buttonText }}</button>
       <button @click="close">关闭</button>
     </div>
   </main>
